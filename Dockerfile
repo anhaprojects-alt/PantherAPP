@@ -3,7 +3,8 @@ FROM php:8.3-apache
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libpq-dev unzip git \
     && docker-php-ext-install pdo_pgsql \
-    && a2enmod rewrite headers \
+    && (a2dismod mpm_event mpm_worker mpm_prefork || true) \
+    && a2enmod mpm_prefork rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -24,7 +25,8 @@ RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoload
        '    Header always set Referrer-Policy "strict-origin-when-cross-origin"' \
        '    ErrorLog ${APACHE_LOG_DIR}/error.log' \
        '    CustomLog ${APACHE_LOG_DIR}/access.log combined' \
-       '</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+       '</VirtualHost>' > /etc/apache2/sites-available/000-default.conf \
+    && apache2ctl -t
 
 EXPOSE 80
 CMD ["sh", "-c", "php artisan migrate --force && php artisan config:cache && php artisan route:cache && apache2-foreground"]
