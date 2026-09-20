@@ -3,37 +3,83 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Member\UpdateAvatarRequest;
+use App\Http\Requests\Member\UpdateProfileRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
 {
+    /**
+     * Current user together with the attached member profile.
+     */
     public function show(Request $request): JsonResponse
     {
-        return response()->json($request->user()->load('member'));
+        return response()->json(
+            (new UserResource($request->user()->load('member')))->resolve($request)
+        );
     }
 
-    public function update(Request $request): JsonResponse
+    /**
+     * Update the part of the profile a member maintains itself.
+     */
+    public function update(UpdateProfileRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'religion' => ['nullable', 'string', 'max:40'],
-            'gender' => ['nullable', 'in:male,female'],
-            'marital_status' => ['nullable', 'in:single,married'],
-            'address' => ['nullable', 'string', 'max:1000'],
-            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
-            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
-            'job' => ['nullable', 'string', 'max:120'],
-            'company' => ['nullable', 'string', 'max:160'],
-            'company_address' => ['nullable', 'string', 'max:1000'],
-            'vehicle_type' => ['nullable', 'string', 'max:80'],
-            'vehicle_color' => ['nullable', 'string', 'max:40'],
-            'vehicle_year' => ['nullable', 'integer', 'between:1900,2100'],
-            'chassis_number' => ['nullable', 'string', 'max:80'],
-            'engine_number' => ['nullable', 'string', 'max:80'],
-            'tax_due_date' => ['nullable', 'date'],
+        $user = $request->user();
+        $member = $user->member()->first();
+
+        abort_if($member === null, 404, 'Data member tidak ditemukan.');
+
+        $member->update($request->validated());
+
+        return response()->json(
+            (new UserResource($user->load('member')))->resolve($request)
+        );
+    }
+
+    /**
+     * Replace the profile photo and drop the previous file.
+     */
+    public function updateAvatar(UpdateAvatarRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        $member = $user->member()->first();
+
+        abort_if($member === null, 404, 'Data member tidak ditemukan.');
+
+        $previousPath = $member->profile_photo_path;
+        $member->update([
+            'profile_photo_path' => $request->file('avatar')->store("avatars/{$user->id}", 'public'),
         ]);
 
-        $request->user()->member()->update($data);
-        return response()->json($request->user()->fresh()->load('member'));
+        if ($previousPath !== null) {
+            Storage::disk('public')->delete($previousPath);
+        }
+
+        return response()->json(
+            (new UserResource($user->load('member')))->resolve($request)
+        );
+    }
+
+    /**
+     * Remove the profile photo of the current member.
+     */
+    public function destroyAvatar(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $member = $user->member()->first();
+
+        abort_if($member === null, 404, 'Data member tidak ditemukan.');
+
+        if ($member->profile_photo_path !== null) {
+            Storage::disk('public')->delete($member->profile_photo_path);
+            $member->update(['profile_photo_path' => null]);
+        }
+
+        return response()->json(
+            (new UserResource($user->load('member')))->resolve($request)
+        );
     }
 }

@@ -9,8 +9,9 @@ if [ -z "${DB_URL:-}" ] && { [ -z "${DB_HOST:-}" ] || [ -z "${DB_DATABASE:-}" ] 
     exit 1
 fi
 
-mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
+mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs storage/app/member-documents bootstrap/cache
 
+php artisan storage:link || true
 php artisan migrate --force
 php artisan config:cache
 php artisan route:cache

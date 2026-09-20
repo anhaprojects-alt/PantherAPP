@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class PromoteAdmin extends Command
 {
     protected $signature = 'panther:promote-admin {email}';
+
     protected $description = 'Grant administrator access to an existing user';
 
     public function handle(): int
@@ -16,11 +17,13 @@ class PromoteAdmin extends Command
 
         if (! $user) {
             $this->error('User tidak ditemukan.');
+
             return self::FAILURE;
         }
 
-        $user->update(['is_admin' => true]);
+        $user->forceFill(['is_admin' => true])->save();
         $this->info("Admin access granted to {$user->email}.");
+
         return self::SUCCESS;
     }
 }

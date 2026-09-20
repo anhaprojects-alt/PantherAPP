@@ -47,6 +47,26 @@ return [
             'report' => false,
         ],
 
+        /*
+        |--------------------------------------------------------------------------
+        | Member Documents Disk
+        |--------------------------------------------------------------------------
+        |
+        | Uploaded KTP, SIM and payment proofs are sensitive and must never be
+        | reachable over HTTP. They live outside of the served storage root
+        | and are streamed through the admin-only document endpoints, which
+        | is why "serve" is disabled for this disk.
+        |
+        */
+
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/member-documents'),
+            'serve' => false,
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
