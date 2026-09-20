@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class AdminLoginTest extends TestCase
@@ -127,5 +128,27 @@ class AdminLoginTest extends TestCase
 
         $this->post('/admin/login', ['email' => $admin->email, 'password' => 'salah'])
             ->assertStatus(429);
+    }
+
+    /**
+     * Production runs the database session driver while the suite runs on the array
+     * driver, so without this test the real session path would never be exercised.
+     */
+    public function test_the_panel_works_on_the_database_session_driver(): void
+    {
+        config()->set('session.driver', 'database');
+        app('session')->forgetDrivers();
+
+        $admin = User::factory()->admin()->create(['password' => 'rahasia-sekali']);
+
+        $this->get('/admin/login')->assertOk();
+
+        $this->post('/admin/login', ['email' => $admin->email, 'password' => 'rahasia-sekali'])
+            ->assertRedirect(route('admin.dashboard'));
+
+        $this->assertAuthenticatedAs($admin);
+        $this->assertGreaterThanOrEqual(1, DB::table('sessions')->count());
+
+        $this->get('/admin')->assertOk();
     }
 }
