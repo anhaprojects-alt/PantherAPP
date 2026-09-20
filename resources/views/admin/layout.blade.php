@@ -12,7 +12,7 @@
         <header class="site-header">
             <div class="wrap header-inner">
                 <a class="brand" href="{{ route('admin.dashboard') }}">
-                    <img src="{{ asset('assets/panther-wordmark.png') }}" alt="{{ config('app.name', 'PantherAPP') }}">
+                    <img src="{{ asset('assets/panther-wordmark-alpha.png') }}" alt="{{ config('app.name', 'PantherAPP') }}">
                 </a>
 
                 <form method="POST" action="{{ route('admin.logout') }}">
@@ -21,12 +21,20 @@
                 </form>
             </div>
 
-            <nav class="wrap admin-nav">
-                <a class="nav-link @if (request()->routeIs('admin.dashboard')) is-active @endif" href="{{ route('admin.dashboard') }}">
+            <nav class="wrap admin-nav" aria-label="Navigasi panel">
+                <a
+                    class="nav-link @if (request()->routeIs('admin.dashboard')) is-active @endif"
+                    href="{{ route('admin.dashboard') }}"
+                    @if (request()->routeIs('admin.dashboard')) aria-current="page" @endif
+                >
                     Dashboard
                 </a>
 
-                <a class="nav-link @if (request()->routeIs('admin.members.*')) is-active @endif" href="{{ route('admin.members.index') }}">
+                <a
+                    class="nav-link @if (request()->routeIs('admin.members.*')) is-active @endif"
+                    href="{{ route('admin.members.index') }}"
+                    @if (request()->routeIs('admin.members.*')) aria-current="page" @endif
+                >
                     Member
                     @isset($counts)
                         <span class="badge badge-pending">{{ $counts['pending'] }} menunggu</span>
@@ -36,11 +44,15 @@
         </header>
 
         <main class="wrap panel">
-            <h1>@yield('heading')</h1>
+            <div class="page-head">
+                <div>
+                    <h1 class="page-title">@yield('heading')</h1>
 
-            @hasSection('subheading')
-                <p class="muted">@yield('subheading')</p>
-            @endif
+                    @hasSection('subheading')
+                        <p class="page-sub">@yield('subheading')</p>
+                    @endif
+                </div>
+            </div>
 
             @if (session('status'))
                 <div class="flash" role="status">{{ session('status') }}</div>

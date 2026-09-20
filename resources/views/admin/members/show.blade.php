@@ -43,7 +43,7 @@
                 @csrf
 
                 <label class="label" for="reason">Alasan penolakan (dikirim ke pemohon)</label>
-                <textarea class="input textarea" id="reason" name="reason" rows="3" maxlength="500" required>{{ old('reason') }}</textarea>
+                <textarea class="input textarea" id="reason" name="reason" rows="3" maxlength="500" required @error('reason') aria-invalid="true" @enderror>{{ old('reason') }}</textarea>
 
                 @error('reason')
                     <p class="field-error">{{ $message }}</p>

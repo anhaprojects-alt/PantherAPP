@@ -26,11 +26,12 @@
             @endforeach
         </div>
 
-        <form class="search" method="GET" action="{{ route('admin.members.index') }}">
+        <form class="search" method="GET" action="{{ route('admin.members.index') }}" role="search">
             @if ($status)
                 <input type="hidden" name="status" value="{{ $status->value }}">
             @endif
-            <input class="input" type="search" name="q" value="{{ $search }}" placeholder="Cari nama, email, HP, KTP">
+            <label class="sr-only" for="q">Cari member</label>
+            <input class="input" id="q" type="search" name="q" value="{{ $search }}" placeholder="Cari nama, email, HP, KTP">
             <button class="btn btn-ghost" type="submit">Cari</button>
         </form>
     </div>
@@ -55,16 +56,18 @@
                 <tbody>
                     @foreach ($members as $member)
                         <tr>
-                            <td>
-                                {{ $member->user->name }}
-                                <div class="muted small">{{ $member->user->email }}</div>
+                            <td data-label="Nama">
+                                <div>
+                                    {{ $member->user->name }}
+                                    <div class="muted small">{{ $member->user->email }}</div>
+                                </div>
                             </td>
-                            <td>{{ $member->member_id ?? '—' }}</td>
-                            <td class="muted">{{ $member->phone ?: '—' }}</td>
-                            <td>
+                            <td data-label="Nomor anggota">{{ $member->member_id ?? '—' }}</td>
+                            <td class="muted" data-label="Telepon">{{ $member->phone ?: '—' }}</td>
+                            <td data-label="Status">
                                 <span class="badge badge-{{ $member->status->value }}">{{ $member->status->label() }}</span>
                             </td>
-                            <td class="muted">{{ $member->created_at?->translatedFormat('d M Y') }}</td>
+                            <td class="muted" data-label="Diajukan">{{ $member->created_at?->translatedFormat('d M Y') }}</td>
                             <td class="table-action">
                                 <a class="btn btn-ghost" href="{{ route('admin.members.show', $member) }}">Detail</a>
                             </td>

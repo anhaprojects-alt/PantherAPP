@@ -7,13 +7,20 @@
         <title>{{ config('app.name', 'PantherAPP') }}</title>
         <meta name="description" content="PantherAPP — pendaftaran dan keanggotaan komunitas Panther.">
 
+        {{--
+            The opaque original stays published for link previews; the page itself
+            uses the transparent derivative so the mark sits on glass and gradients
+            without a white plate behind it.
+        --}}
+        <meta property="og:image" content="{{ asset('assets/panther-wordmark.png') }}">
+
         <link rel="stylesheet" href="{{ asset('assets/panther.css') }}">
     </head>
     <body>
         <header class="site-header">
             <div class="wrap header-inner">
                 <a class="brand" href="{{ route('home') }}">
-                    <img src="{{ asset('assets/panther-wordmark.png') }}" alt="{{ config('app.name', 'PantherAPP') }}">
+                    <img src="{{ asset('assets/panther-wordmark-alpha.png') }}" alt="{{ config('app.name', 'PantherAPP') }}">
                 </a>
 
                 <a class="btn btn-ghost" href="{{ route('admin.login') }}">Masuk Admin</a>
@@ -23,7 +30,8 @@
         <main>
             <section class="hero">
                 <div class="wrap hero-grid">
-                    <div>
+                    <div class="hero-copy">
+                        <span class="hero-badge">Premium Community Platform</span>
                         <h1 class="hero-title">Komunitas Panther dalam satu aplikasi</h1>
 
                         <p class="hero-lead">
@@ -37,9 +45,15 @@
                         </div>
                     </div>
 
-                    <div class="hero-media">
-                        <img class="emblem" src="{{ asset('assets/panther-badge.png') }}" alt="" aria-hidden="true">
-                        <img class="car" src="{{ asset('assets/panther-car.webp') }}" alt="" aria-hidden="true">
+                    {{-- Decorative 3D composition: two cards recede behind the front plate. --}}
+                    <div class="hero-stage" aria-hidden="true">
+                        <span class="stage-card stage-card--faint"></span>
+                        <span class="stage-card stage-card--back"></span>
+
+                        <span class="stage-card">
+                            <img class="stage-emblem" src="{{ asset('assets/panther-badge.png') }}" alt="">
+                            <img class="stage-car" src="{{ asset('assets/panther-car.webp') }}" alt="">
+                        </span>
                     </div>
                 </div>
             </section>
