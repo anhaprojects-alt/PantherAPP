@@ -32,9 +32,9 @@ class MemberDetailResource extends JsonResource
                 'email' => $user->email,
             ]),
             'documents' => [
-                'ktp' => route('admin.members.documents.show', ['member' => $this->id, 'type' => 'ktp']),
-                'sim' => route('admin.members.documents.show', ['member' => $this->id, 'type' => 'sim']),
-                'payment' => route('admin.members.documents.show', ['member' => $this->id, 'type' => 'payment']),
+                'ktp' => route('api.admin.members.documents.show', ['member' => $this->id, 'type' => 'ktp']),
+                'sim' => route('api.admin.members.documents.show', ['member' => $this->id, 'type' => 'sim']),
+                'payment' => route('api.admin.members.documents.show', ['member' => $this->id, 'type' => 'payment']),
             ],
         ];
     }

@@ -23,7 +23,11 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('me.documents.show')
         ->whereIn('type', MemberDocumentController::TYPES);
 
-    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+    /*
+     * The name prefix keeps these endpoints distinct from the web panel routes
+     * in routes/web.php, which own the `admin.*` names.
+     */
+    Route::middleware('admin')->prefix('admin')->name('api.admin.')->group(function () {
         Route::get('/members/pending', [AdminController::class, 'pending'])->name('members.pending');
         Route::get('/members/{member}', [AdminController::class, 'show'])->name('members.show');
         Route::post('/members/{member}/approve', [AdminController::class, 'approve'])->name('members.approve');

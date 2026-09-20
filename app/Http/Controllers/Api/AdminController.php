@@ -10,7 +10,6 @@ use App\Http\Resources\Admin\MemberSummaryResource;
 use App\Models\Member;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -51,7 +50,7 @@ class AdminController extends Controller
     {
         abort_if($member->isApproved(), 422, 'Member sudah disetujui.');
 
-        $member->markAsApproved($this->generateMemberId());
+        $member->markAsApproved(Member::nextMemberNumber());
 
         return response()->json(
             (new MemberDetailResource($member->load('user')))->resolve($request)
@@ -70,17 +69,5 @@ class AdminController extends Controller
         return response()->json(
             (new MemberDetailResource($member->load('user')))->resolve($request)
         );
-    }
-
-    /**
-     * Member numbers are random, so retry until the unique index accepts one.
-     */
-    private function generateMemberId(): string
-    {
-        do {
-            $memberId = 'PM-'.strtoupper(Str::random(8));
-        } while (Member::where('member_id', $memberId)->exists());
-
-        return $memberId;
     }
 }

@@ -21,4 +21,9 @@ enum MemberStatus: string
     {
         return $this === self::Approved;
     }
+
+    public function isRejected(): bool
+    {
+        return $this === self::Rejected;
+    }
 }

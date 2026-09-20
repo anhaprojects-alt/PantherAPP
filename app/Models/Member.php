@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Member extends Model
 {
@@ -76,6 +77,41 @@ class Member extends Model
     public function scopePending(Builder $query): void
     {
         $query->where('status', MemberStatus::Pending);
+    }
+
+    /**
+     * Number of members per status, keyed by the status value.
+     *
+     * @return array<string, int>
+     */
+    public static function statusCounts(): array
+    {
+        $counts = static::query()
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $totals = [];
+
+        foreach (MemberStatus::cases() as $case) {
+            $totals[$case->value] = (int) ($counts[$case->value] ?? 0);
+        }
+
+        return $totals;
+    }
+
+    /**
+     * Issue a member number that the unique index will accept.
+     *
+     * The numbers are random, so retry whenever the index rejects one.
+     */
+    public static function nextMemberNumber(): string
+    {
+        do {
+            $memberId = 'PM-'.strtoupper(Str::random(8));
+        } while (static::query()->where('member_id', $memberId)->exists());
+
+        return $memberId;
     }
 
     public function isApproved(): bool
