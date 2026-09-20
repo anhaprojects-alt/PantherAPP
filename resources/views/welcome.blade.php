@@ -31,7 +31,7 @@
             <section class="hero">
                 <div class="wrap hero-grid">
                     <div class="hero-copy">
-                        <span class="hero-badge">Premium Community Platform</span>
+                        <span class="hero-badge">Platform Komunitas Premium</span>
                         <h1 class="hero-title">Komunitas Panther dalam satu aplikasi</h1>
 
                         <p class="hero-lead">
