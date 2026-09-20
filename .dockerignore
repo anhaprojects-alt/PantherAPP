@@ -16,3 +16,4 @@ tests
 *service-account*.json
 *.pem
 secrets/
+public/build
