@@ -40,6 +40,7 @@ APP_URL=https://pantherapp-production.up.railway.app
 APP_KEY=<generate with php artisan key:generate --show>
 APP_FORCE_HTTPS=true
 DB_CONNECTION=pgsql
+DB_URL=${{Postgres.DATABASE_URL}}
 DB_HOST=${{Postgres.PGHOST}}
 DB_PORT=${{Postgres.PGPORT}}
 DB_DATABASE=${{Postgres.PGDATABASE}}
@@ -49,7 +50,9 @@ DB_SSLMODE=require
 CORS_ALLOWED_ORIGINS=https://pantherapp-production.up.railway.app
 ```
 
-Use Railway's **Variables → Add Reference** menu for the exact service reference syntax. Do not hardcode the database password or the host `iriguchi.proxy.rlwy.net:22065` in source; internal Railway references are more reliable and avoid exposing credentials.
+Use Railway's **Variables → Add Reference** menu for the exact service reference syntax. `DB_URL` must reference the PostgreSQL service's private `DATABASE_URL`. Do not use `DATABASE_PUBLIC_URL`, `RAILWAY_TCP_PROXY_DOMAIN`, or `RAILWAY_TCP_PROXY_PORT` from the Laravel service. Do not hardcode the database password or the host `iriguchi.proxy.rlwy.net:22065` in source; internal Railway references are more reliable and avoid exposing credentials.
+
+The password shown in a chat message must be considered compromised. Rotate `POSTGRES_PASSWORD` in the Railway PostgreSQL service, redeploy/restart the database service, then update the Laravel service reference variables. Never commit the generated password, `.env`, or Firebase Admin SDK JSON.
 
 After the first deployment, create an account through the API and promote it:
 

@@ -12,3 +12,7 @@ storage/framework/views/*
 database/*.sqlite
 tests
 *.log
+*firebase-adminsdk*.json
+*service-account*.json
+*.pem
+secrets/
