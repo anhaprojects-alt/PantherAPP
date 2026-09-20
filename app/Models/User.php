@@ -18,7 +18,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-    public function member()
+    public function member(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Member::class);
     }

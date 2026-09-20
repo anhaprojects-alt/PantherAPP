@@ -60,4 +60,4 @@ After the first deployment, create an account through the API and promote it:
 php artisan panther:promote-admin admin@example.com
 ```
 
-The Docker image runs migrations, caches configuration/routes, enables Apache rewrite rules, and exposes `/up` for Railway health checks. Assign `pantherapp-production.up.railway.app` to this service in Railway.
+The Docker image runs migrations, caches configuration/routes, and starts Laravel's production HTTP server on Railway's `PORT` (default `8080`). It exposes `/up` for Railway health checks. Assign `pantherapp-production.up.railway.app` to this service in Railway.

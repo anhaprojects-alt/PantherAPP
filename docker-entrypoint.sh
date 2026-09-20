@@ -10,10 +10,9 @@ if [ -z "${DB_URL:-}" ] && { [ -z "${DB_HOST:-}" ] || [ -z "${DB_DATABASE:-}" ] 
 fi
 
 mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
-chown -R www-data:www-data storage bootstrap/cache
 
 php artisan migrate --force
 php artisan config:cache
 php artisan route:cache
 
-exec apache2-foreground
+exec php artisan serve --host=0.0.0.0 --port="${PORT:-8080}"
