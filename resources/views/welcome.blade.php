@@ -23,7 +23,6 @@
                     <img src="{{ asset('assets/panther-wordmark-alpha.png') }}" alt="{{ config('app.name', 'PantherAPP') }}">
                 </a>
 
-                <a class="btn btn-ghost" href="{{ route('admin.login') }}">Masuk Admin</a>
             </div>
         </header>
 
@@ -31,7 +30,7 @@
             <section class="hero">
                 <div class="wrap hero-grid">
                     <div class="hero-copy">
-                        <span class="hero-badge">Platform Komunitas Premium</span>
+                        <span class="hero-badge">Platform Komunitas</span>
                         <h1 class="hero-title"><span>Komunitas Panther</span> dalam satu aplikasi</h1>
 
                         <p class="hero-lead">
@@ -40,7 +39,7 @@
                         </p>
 
                         <div class="hero-actions">
-                            <a class="btn btn-primary" href="{{ route('admin.login') }}">Masuk Admin</a>
+
                             <a class="btn btn-ghost" href="#alur">Lihat alur pendaftaran</a>
                         </div>
                     </div>
