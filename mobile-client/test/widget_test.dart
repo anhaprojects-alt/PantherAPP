@@ -1,30 +1,37 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:app_portal_sekolah/main.dart';
+import 'package:panther_mania/features/auth/domain/models/user_model.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('UserModel mem-parse resource member bersarang', () {
+    final user = UserModel.fromJson(const {
+      'id': 7,
+      'name': 'Budi',
+      'email': 'budi@panther.test',
+      'is_admin': false,
+      'member': {
+        'id': 3,
+        'member_id': 'PM-ABCD1234',
+        'status': 'approved',
+        'status_label': 'Disetujui',
+        'phone': '0812',
+      },
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(user.isAdmin, isFalse);
+    expect(user.member, isNotNull);
+    expect(user.member!.isApproved, isTrue);
+    expect(user.member!.memberId, 'PM-ABCD1234');
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('UserModel menolerensi member null', () {
+    final user = UserModel.fromJson(const {
+      'id': 1,
+      'name': 'Admin',
+      'email': 'admin@panther.test',
+      'is_admin': true,
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(user.isAdmin, isTrue);
+    expect(user.member, isNull);
   });
 }

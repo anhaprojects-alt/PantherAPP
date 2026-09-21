@@ -5,7 +5,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      colorSchemeSeed: Colors.blue,
+      colorSchemeSeed: const Color(0xFF0F172A),
       brightness: Brightness.light,
       textTheme: GoogleFonts.poppinsTextTheme(),
       appBarTheme: const AppBarTheme(

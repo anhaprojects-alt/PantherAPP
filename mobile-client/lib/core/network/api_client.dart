@@ -10,9 +10,9 @@ class ApiClient {
     baseUrl: ApiEndpoints.baseUrl,
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 10),
+    // Content-Type diset per-request; FormData harus multipart, bukan json.
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json',
     },
   )) {
     dio.interceptors.add(

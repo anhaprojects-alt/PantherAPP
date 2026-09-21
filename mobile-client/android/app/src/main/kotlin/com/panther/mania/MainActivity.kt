@@ -1,4 +1,4 @@
-package com.example.app_portal_sekolah
+package com.panther.mania
 
 import io.flutter.embedding.android.FlutterActivity
 
