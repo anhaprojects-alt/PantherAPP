@@ -32,7 +32,7 @@
                 <div class="wrap hero-grid">
                     <div class="hero-copy">
                         <span class="hero-badge">Platform Komunitas Premium</span>
-                        <h1 class="hero-title">Komunitas Panther dalam satu aplikasi</h1>
+                        <h1 class="hero-title"><span>Komunitas Panther</span> dalam satu aplikasi</h1>
 
                         <p class="hero-lead">
                             Daftar sebagai anggota, unggah dokumen yang dibutuhkan, lalu tunggu
