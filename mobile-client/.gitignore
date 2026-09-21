@@ -1,0 +1,29 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+.metadata
+
+# Android
+.gradle/
+local.properties
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Backend (Laravel)
+backend/.env
+backend/vendor/
+backend/node_modules/
+backend/public/storage
+backend/storage/*.key
+backend/.phpunit.result.cache
+
+# Misc
+.DS_Store
+.env
+.artifacts/
