@@ -15,5 +15,6 @@ php artisan storage:link || true
 php artisan migrate --force
 php artisan config:cache
 php artisan route:cache
+php artisan view:cache
 
-exec php artisan serve --host=0.0.0.0 --port="${PORT:-8080}"
+exec php -S 0.0.0.0:"${PORT:-8080}" -t public
