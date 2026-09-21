@@ -13,6 +13,7 @@ mkdir -p storage/framework/cache/data storage/framework/sessions storage/framewo
 
 php artisan storage:link || true
 php artisan migrate --force
+php artisan db:seed --force
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache

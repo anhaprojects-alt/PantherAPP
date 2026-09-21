@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:animate_do/animate_do.dart';
 import '../bloc/auth_bloc.dart';
 import '../../domain/models/registration_data.dart';
+import '../../../../core/theme/app_theme.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -50,7 +52,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _documents['sim'] == null ||
         _documents['payment'] == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lengkapi ketiga dokumen (KTP, SIM, bukti bayar).')),
+        const SnackBar(
+          content: Text('Lengkapi ketiga dokumen (KTP, SIM, bukti bayar).'),
+          backgroundColor: AppColors.primary,
+        ),
       );
       return;
     }
@@ -74,30 +79,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Daftar Member')),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text('PENDAFTARAN MEMBER'),
+      ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is RegisterSubmitted) {
-            showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: const Text('Pendaftaran terkirim'),
-                content: Text(state.message),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Kembali ke Login'),
-                  ),
-                ],
-              ),
-            );
+            _showSuccessDialog(state.message);
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(state.message)));
+              ..showSnackBar(SnackBar(content: Text(state.message), backgroundColor: AppColors.primary));
           }
         },
         child: SafeArea(
@@ -106,39 +99,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: ListView(
               padding: const EdgeInsets.all(24),
               children: [
-                _field(_name, 'Nama lengkap', TextInputType.name),
-                _field(_email, 'Email', TextInputType.emailAddress,
-                    validator: (v) => (v == null || !v.contains('@')) ? 'Email tidak valid' : null),
-                _field(_password, 'Password', TextInputType.visiblePassword, obscure: true,
-                    validator: (v) => (v == null || v.length < 10)
-                        ? 'Minimal 10 karakter'
-                        : null),
-                _field(_confirmPassword, 'Konfirmasi password', TextInputType.visiblePassword,
-                    obscure: true,
-                    validator: (v) => v != _password.text ? 'Password tidak sama' : null),
-                _field(_phone, 'No. HP', TextInputType.phone),
-                _field(_ktpNumber, 'Nomor KTP', TextInputType.number),
-                _field(_simNumber, 'Nomor SIM', TextInputType.text),
-                const SizedBox(height: 8),
-                const Text('Unggah dokumen', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
+                FadeInDown(
+                  child: const Text(
+                    'Gabung Komunitas',
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+                  ),
+                ),
+                FadeInDown(
+                  delay: const Duration(milliseconds: 100),
+                  child: const Text(
+                    'Isi data diri Anda dengan lengkap sesuai identitas resmi.',
+                    style: TextStyle(color: AppColors.muted, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                _buildSectionTitle('INFORMASI AKUN'),
+                _field(_name, 'Nama Lengkap', Icons.person_outline),
+                _field(_email, 'Email Address', Icons.email_outlined, type: TextInputType.emailAddress),
+                _field(_password, 'Password', Icons.lock_outline, obscure: true),
+                _field(_confirmPassword, 'Konfirmasi Password', Icons.lock_reset_rounded, obscure: true),
+
+                const SizedBox(height: 24),
+                _buildSectionTitle('DATA IDENTITAS'),
+                _field(_phone, 'Nomor HP', Icons.phone_android_rounded, type: TextInputType.phone),
+                _field(_ktpNumber, 'Nomor KTP', Icons.badge_outlined, type: TextInputType.number),
+                _field(_simNumber, 'Nomor SIM', Icons.drive_eta_outlined),
+
+                const SizedBox(height: 24),
+                _buildSectionTitle('UNGGAH DOKUMEN'),
                 _docTile('ktp', 'Foto KTP'),
                 _docTile('sim', 'Foto SIM'),
-                _docTile('payment', 'Bukti Pembayaran'),
-                const SizedBox(height: 24),
-                BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, state) {
-                    final loading = state is AuthLoading;
-                    return ElevatedButton(
-                      onPressed: loading ? null : _submit,
-                      child: loading
-                          ? const SizedBox(
-                              height: 20, width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2))
-                          : const Text('Kirim Pendaftaran'),
-                    );
-                  },
+                _docTile('payment', 'Bukti Pembayaran Registrasi'),
+
+                const SizedBox(height: 40),
+                FadeInUp(
+                  child: BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      final loading = state is AuthLoading;
+                      return ElevatedButton(
+                        onPressed: loading ? null : _submit,
+                        child: loading
+                            ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                            : const Text('KIRIM PENDAFTARAN'),
+                      );
+                    },
+                  ),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -147,30 +155,94 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _field(TextEditingController controller, String label, TextInputType type,
-      {bool obscure = false, String? Function(String?)? validator}) {
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16, top: 8),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 1.2, color: AppColors.primary),
+      ),
+    );
+  }
+
+  Widget _field(TextEditingController controller, String label, IconData icon,
+      {bool obscure = false, TextInputType type = TextInputType.text}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        controller: controller,
-        obscureText: obscure,
-        keyboardType: type,
-        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
-        validator: validator,
+      child: FadeInLeft(
+        child: TextFormField(
+          controller: controller,
+          obscureText: obscure,
+          keyboardType: type,
+          decoration: InputDecoration(
+            labelText: label,
+            prefixIcon: Icon(icon),
+          ),
+          validator: (v) {
+            if (v == null || v.isEmpty) return 'Wajib diisi';
+            if (label == 'Email Address' && !v.contains('@')) return 'Email tidak valid';
+            if (label == 'Password' && v.length < 10) return 'Minimal 10 karakter';
+            return null;
+          },
+        ),
       ),
     );
   }
 
   Widget _docTile(String key, String label) {
     final picked = _documents[key];
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        title: Text(label),
-        subtitle: Text(picked == null ? 'Belum dipilih' : picked.name),
-        trailing: TextButton(
-          onPressed: () => _pick(key),
-          child: const Text('Pilih'),
+    return FadeInRight(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: picked != null ? AppColors.primary : AppColors.ink.withOpacity(0.05)),
+        ),
+        child: ListTile(
+          leading: Icon(picked != null ? Icons.check_circle_rounded : Icons.cloud_upload_outlined,
+                       color: picked != null ? Colors.green : AppColors.muted),
+          title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          subtitle: Text(picked == null ? 'Pilih file gambar' : picked.name,
+                        style: TextStyle(fontSize: 12, color: picked != null ? AppColors.primary : AppColors.muted)),
+          trailing: TextButton(
+            onPressed: () => _pick(key),
+            child: const Text('PILIH', style: TextStyle(fontWeight: FontWeight.w800)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => ZoomIn(
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Icon(Icons.check_circle_outline_rounded, color: Colors.green, size: 60),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('BERHASIL!', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 22)),
+              const SizedBox(height: 12),
+              Text(message, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w600)),
+            ],
+          ),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(minimumSize: const Size(120, 45)),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: const Text('OKE'),
+              ),
+            ),
+            const SizedBox(height: 10),
+          ],
         ),
       ),
     );

@@ -28,10 +28,29 @@ dependencies:
   google_fonts: ^6.1.0
   intl: ^0.19.0
 
+  # Penambahan Ijin & Fitur Premium 3D
+  permission_handler: ^11.3.1
+  geolocator: ^11.0.0
+  animate_do: ^3.3.4
+  glass_kit: ^3.0.0
+  cached_network_image: ^3.3.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/images/panther-badge.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/panther-badge.png"
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/
+
