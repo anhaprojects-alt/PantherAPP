@@ -19,13 +19,13 @@ class MemberFactory extends Factory
      */
     public function definition(): array
     {
-        $folder = fake()->uuid();
+        $folder = $this->faker->uuid();
 
         return [
             'user_id' => User::factory(),
-            'phone' => fake()->numerify('08##########'),
-            'ktp_number' => fake()->numerify('################'),
-            'sim_number' => fake()->numerify('############'),
+            'phone' => $this->faker->numerify('08##########'),
+            'ktp_number' => $this->faker->numerify('################'),
+            'sim_number' => $this->faker->numerify('############'),
             'status' => MemberStatus::Pending,
             'ktp_path' => $folder.'/ktp.jpg',
             'sim_path' => $folder.'/sim.jpg',
@@ -40,7 +40,7 @@ class MemberFactory extends Factory
     {
         return $this->state(fn (array $attributes): array => [
             'status' => MemberStatus::Approved,
-            'member_id' => 'PM-'.fake()->regexify('[A-Z0-9]{8}'),
+            'member_id' => 'PM-'.$this->faker->regexify('[A-Z0-9]{8}'),
             'approved_at' => now(),
         ]);
     }
