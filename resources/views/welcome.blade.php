@@ -39,7 +39,7 @@
                         </p>
 
                         <div class="hero-actions">
-
+                            <a class="btn btn-primary" href="https://github.com/anhaprojects-alt/PantherAPP/releases/download/v1.0.0/PantherMania-v1.0.0.apk" download>Download APK</a>
                             <a class="btn btn-ghost" href="#alur">Lihat alur pendaftaran</a>
                         </div>
                     </div>
