@@ -89,7 +89,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.only(left: 24, bottom: 16),
         centerTitle: false,
-        title: Text(
+        title: const Text(
           'PANTHER MANIA',
           style: TextStyle(
             color: AppColors.ink,
@@ -98,14 +98,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             letterSpacing: 1.2,
           ),
         ),
-        background: Stack(
+        background: const Stack(
           children: [
-             Positioned(
+            Positioned(
               top: -50,
               right: -50,
               child: CircleAvatar(
                 radius: 100,
-                backgroundColor: AppColors.primary.withOpacity(0.05),
+                backgroundColor: Color(0x0DFD0000),
               ),
             ),
           ],
@@ -194,7 +194,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       childAspectRatio: 1.1,
       children: [
         _PremiumMenuCard(
-          icon: Icons.person_3d_rounded,
+          icon: Icons.account_circle_rounded,
           title: 'Profil Saya',
           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen())),
         ),
@@ -243,7 +243,9 @@ class _Status3DCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final member = user.member;
     final bool isApproved = member?.status == 'approved';
-    final Color statusColor = isApproved ? Colors.green : (member?.status == 'rejected' ? Colors.red : Colors.orange);
+    final Color statusColor = isApproved
+        ? Colors.green
+        : (member?.status == 'rejected' ? Colors.red : Colors.orange);
 
     return Container(
       width: double.infinity,
@@ -274,11 +276,21 @@ class _Status3DCard extends StatelessWidget {
                 style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w800, letterSpacing: 1),
               ),
               GlassContainer(
+                height: 30,
+                width: 100,
                 blur: 10,
-                opacity: 0.2,
+                color: statusColor.withOpacity(0.1),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withOpacity(0.2),
+                    Colors.white.withOpacity(0.05),
+                  ],
+                ),
+                border: Border.all(color: Colors.white.withOpacity(0.2)),
                 borderRadius: BorderRadius.circular(10),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                child: Center(
                   child: Text(
                     member?.statusLabel?.toUpperCase() ?? 'PENDING',
                     style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),

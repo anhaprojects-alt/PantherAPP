@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:glass_kit/glass_kit.dart';
 import '../bloc/auth_bloc.dart';
 import '../../../dashboard/presentation/screens/dashboard_screen.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -28,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FadeInDown(
                 child: Center(
@@ -161,8 +160,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       'Belum punya akun? ',
                       style: TextStyle(color: AppColors.muted, fontWeight: FontWeight.w600),
                     ),
-                    GestureDetector(
+                    TextButton(
                       onPressed: () {},
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: const Size(0, 0),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                       child: const Text(
                         'Daftar Sekarang',
                         style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w800),
